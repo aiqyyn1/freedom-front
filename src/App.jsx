@@ -33,6 +33,40 @@ function App() {
   const [commissionData, setCommissionData] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
 
+  // Mock data for customer segments table
+  const customerSegments = [
+    {
+      priority: 1,
+      segment: "VIP-клиенты",
+      description: "Клиенты с высокой активностью, частыми сделками и максимальными комиссиями. Они приносят основную прибыль компании.",
+      recommendations: "Персональные бонусы, эксклюзивный доступ, VIP-ивенты, индивидуальные консультации, реферальные программы."
+    },
+    {
+      priority: 2,
+      segment: "Потенциальные лидеры",
+      description: "Клиенты с высоким прошлым доходом (комиссиями), но с низкой текущей активностью. Риск ухода, но есть потенциал для возврата.",
+      recommendations: "Персонализированные ре-активационные кампании, снижение комиссии при возврате, эксклюзивные предложения, email и push-уведомления."
+    },
+    {
+      priority: 3,
+      segment: "Средний класс",
+      description: "Клиенты со стабильной умеренной активностью и комиссией. Это основной сегмент с возможностью роста.",
+      recommendations: "Программы лояльности, регулярные обзоры рынка, акции по увеличению активности, геймификация, обучающие материалы."
+    },
+    {
+      priority: 4,
+      segment: "Новые клиенты",
+      description: "Клиенты, недавно начавшие торговать, с низкой активностью и оборотами. Требуют поддержки и обучения.",
+      recommendations: "Приветственные бонусы, обучающие вебинары, безрисковые сделки, onboarding-кампании, поддержка и сопровождение."
+    },
+    {
+      priority: 5,
+      segment: "Спящие клиенты",
+      description: "Долгосрочно неактивные клиенты, риск полностью потерять их. Требуют стимулирования.",
+      recommendations: "Автоматические триггерные сообщения, бонусы за возвращение, геймификация, опросы причин неактивности, SMS и push-уведомления."
+    }
+  ];
+
   useEffect(() => {
     // Fetch data from the three endpoints
     const fetchData = async () => {
@@ -213,11 +247,49 @@ function App() {
         </button>
       </div>
 
-      <main className="bg-gray-800 shadow-md rounded-lg p-6 overflow-hidden">
-        <div className="chart-container" style={{ height: '500px', position: 'relative' }}>
+      <main className="bg-gray-800 shadow-md rounded-lg p-6 overflow-hidden mb-6">
+        <div className="chart-container" style={{ height: '400px', position: 'relative' }}>
           {renderChart()}
         </div>
       </main>
+
+      <section className="bg-gray-800 shadow-md rounded-lg overflow-hidden">
+        <h2 className="text-xl font-bold text-white p-6 border-b border-gray-700">Сегментация клиентов</h2>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead>
+              <tr className="bg-gray-700 text-white">
+                <th className="py-4 px-6 font-semibold">Приоритет</th>
+                <th className="py-4 px-6 font-semibold">Сегмент</th>
+                <th className="py-4 px-6 font-semibold">Описание</th>
+                <th className="py-4 px-6 font-semibold">Рекомендации (Marketing Type)</th>
+                <th className="py-4 px-6 w-12 text-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 inline">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
+                  </svg>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {customerSegments.map((segment, index) => (
+                <tr key={index} className={index % 2 === 0 ? 'bg-black text-white' : 'bg-gray-900 text-white'}>
+                  <td className="py-4 px-6 border-b border-gray-700 font-bold">{segment.priority}</td>
+                  <td className="py-4 px-6 border-b border-gray-700 font-medium">{segment.segment}</td>
+                  <td className="py-4 px-6 border-b border-gray-700">{segment.description}</td>
+                  <td className="py-4 px-6 border-b border-gray-700">{segment.recommendations}</td>
+                  <td className="py-4 px-6 border-b border-gray-700 text-center">
+                    <button className="text-gray-400 hover:text-white">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75l3 3m0 0l3-3m-3 3v-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
       <footer className="mt-6 text-center text-gray-500">
         <p>Анализ каналов привлечения © 2023</p>

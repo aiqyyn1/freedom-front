@@ -34,6 +34,10 @@ body {
   background-color: #2563eb;
 }
 
+.bg-black {
+  background-color: #000000;
+}
+
 .text-white {
   color: #ffffff;
 }
@@ -63,9 +67,19 @@ body {
   padding-bottom: 0.5rem;
 }
 
+.py-4 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
 .px-4 {
   padding-left: 1rem;
   padding-right: 1rem;
+}
+
+.px-6 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 .mb-6 {
@@ -89,6 +103,11 @@ body {
   line-height: 2rem;
 }
 
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
 .font-bold {
   font-weight: 700;
 }
@@ -97,12 +116,24 @@ body {
   font-weight: 500;
 }
 
+.font-semibold {
+  font-weight: 600;
+}
+
 .text-center {
   text-align: center;
 }
 
+.text-left {
+  text-align: left;
+}
+
 .overflow-hidden {
   overflow: hidden;
+}
+
+.overflow-x-auto {
+  overflow-x: auto;
 }
 
 .flex {
@@ -134,6 +165,49 @@ body {
   height: 100%;
   font-size: 1.25rem;
   color: #d1d5db;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.w-6 {
+  width: 1.5rem;
+}
+
+.h-6 {
+  height: 1.5rem;
+}
+
+.w-12 {
+  width: 3rem;
+}
+
+.border-b {
+  border-bottom-width: 1px;
+}
+
+.border-gray-700 {
+  border-color: #374151;
+}
+
+.inline {
+  display: inline;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.hover\:text-white:hover {
+  color: #ffffff;
 }
 
 @media (max-width: 640px) {
