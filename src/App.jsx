@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Pie } from 'react-chartjs-2'
+import ProfileGame from './ProfileGame'
 
 // Register ChartJS components
 ChartJS.register(ArcElement, Tooltip, Legend)
@@ -27,6 +28,10 @@ const generateColors = (count) => {
 }
 
 function App() {
+  // State for active view
+  const [activeView, setActiveView] = useState('profile') // 'charts', 'profile'
+
+  // Charts data states
   const [activeChart, setActiveChart] = useState('channels')
   const [channelsData, setChannelsData] = useState(null)
   const [lifetimeData, setLifetimeData] = useState(null)
@@ -219,80 +224,108 @@ function App() {
     }
   }
 
+  // Render the charts view
+  const renderChartsView = () => {
+    return (
+      <>
+        <header className="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+          <h1 className="text-2xl font-bold text-white">Анализ каналов привлечения</h1>
+          <p className="text-gray-400">Статистика по каналам привлечения клиентов</p>
+        </header>
+
+        <div className="button-group mb-6 flex gap-4">
+          <button
+            className={`py-2 px-4 rounded-lg font-medium ${activeChart === 'channels' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'}`}
+            onClick={() => setActiveChart('channels')}
+          >
+            Количество пользователей
+          </button>
+          <button
+            className={`py-2 px-4 rounded-lg font-medium ${activeChart === 'lifetime' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'}`}
+            onClick={() => setActiveChart('lifetime')}
+          >
+            Среднее время жизни
+          </button>
+          <button
+            className={`py-2 px-4 rounded-lg font-medium ${activeChart === 'commission' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'}`}
+            onClick={() => setActiveChart('commission')}
+          >
+            Общая комиссия
+          </button>
+        </div>
+
+        <main className="bg-gray-800 shadow-md rounded-lg p-6 overflow-hidden mb-6">
+          <div className="chart-container" style={{ height: '400px', position: 'relative' }}>
+            {renderChart()}
+          </div>
+        </main>
+
+        <section className="bg-gray-800 shadow-md rounded-lg overflow-hidden">
+          <h2 className="text-xl font-bold text-white p-6 border-b border-gray-700">Сегментация клиентов</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="bg-gray-700 text-white">
+                  <th className="py-4 px-6 font-semibold">Приоритет</th>
+                  <th className="py-4 px-6 font-semibold">Сегмент</th>
+                  <th className="py-4 px-6 font-semibold">Описание</th>
+                  <th className="py-4 px-6 font-semibold">Рекомендации (Marketing Type)</th>
+                  <th className="py-4 px-6 w-12 text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 inline">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
+                    </svg>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {customerSegments.map((segment, index) => (
+                  <tr key={index} className={index % 2 === 0 ? 'bg-black text-white' : 'bg-gray-900 text-white'}>
+                    <td className="py-4 px-6 border-b border-gray-700 font-bold">{segment.priority}</td>
+                    <td className="py-4 px-6 border-b border-gray-700 font-medium">{segment.segment}</td>
+                    <td className="py-4 px-6 border-b border-gray-700">{segment.description}</td>
+                    <td className="py-4 px-6 border-b border-gray-700">{segment.recommendations}</td>
+                    <td className="py-4 px-6 border-b border-gray-700 text-center">
+                      <button className="text-gray-400 hover:text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75l3 3m0 0l3-3m-3 3v-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gray-900 p-4">
-      <header className="bg-gray-800 shadow-md rounded-lg p-6 mb-6">
-        <h1 className="text-2xl font-bold text-white">Анализ каналов привлечения</h1>
-        <p className="text-gray-400">Статистика по каналам привлечения клиентов</p>
-      </header>
-
-      <div className="button-group mb-6 flex gap-4">
-        <button
-          className={`py-2 px-4 rounded-lg font-medium ${activeChart === 'channels' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'}`}
-          onClick={() => setActiveChart('channels')}
-        >
-          Количество пользователей
-        </button>
-        <button
-          className={`py-2 px-4 rounded-lg font-medium ${activeChart === 'lifetime' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'}`}
-          onClick={() => setActiveChart('lifetime')}
-        >
-          Среднее время жизни
-        </button>
-        <button
-          className={`py-2 px-4 rounded-lg font-medium ${activeChart === 'commission' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'}`}
-          onClick={() => setActiveChart('commission')}
-        >
-          Общая комиссия
-        </button>
-      </div>
-
-      <main className="bg-gray-800 shadow-md rounded-lg p-6 overflow-hidden mb-6">
-        <div className="chart-container" style={{ height: '400px', position: 'relative' }}>
-          {renderChart()}
+      {/* Navigation */}
+      <nav className="flex justify-center mb-6">
+        <div className="bg-gray-800 rounded-lg p-1 flex">
+          <button
+            className={`py-2 px-6 rounded-lg font-medium transition-all ${activeView === 'charts' ? 'bg-blue-600 text-white' : 'text-gray-300 hover:text-white'}`}
+            onClick={() => setActiveView('charts')}
+          >
+            Аналитика
+          </button>
+          <button
+            className={`py-2 px-6 rounded-lg font-medium transition-all ${activeView === 'profile' ? 'bg-blue-600 text-white' : 'text-gray-300 hover:text-white'}`}
+            onClick={() => setActiveView('profile')}
+          >
+            Игровой профиль
+          </button>
         </div>
-      </main>
+      </nav>
 
-      <section className="bg-gray-800 shadow-md rounded-lg overflow-hidden">
-        <h2 className="text-xl font-bold text-white p-6 border-b border-gray-700">Сегментация клиентов</h2>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead>
-              <tr className="bg-gray-700 text-white">
-                <th className="py-4 px-6 font-semibold">Приоритет</th>
-                <th className="py-4 px-6 font-semibold">Сегмент</th>
-                <th className="py-4 px-6 font-semibold">Описание</th>
-                <th className="py-4 px-6 font-semibold">Рекомендации (Marketing Type)</th>
-                <th className="py-4 px-6 w-12 text-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 inline">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
-                  </svg>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {customerSegments.map((segment, index) => (
-                <tr key={index} className={index % 2 === 0 ? 'bg-black text-white' : 'bg-gray-900 text-white'}>
-                  <td className="py-4 px-6 border-b border-gray-700 font-bold">{segment.priority}</td>
-                  <td className="py-4 px-6 border-b border-gray-700 font-medium">{segment.segment}</td>
-                  <td className="py-4 px-6 border-b border-gray-700">{segment.description}</td>
-                  <td className="py-4 px-6 border-b border-gray-700">{segment.recommendations}</td>
-                  <td className="py-4 px-6 border-b border-gray-700 text-center">
-                    <button className="text-gray-400 hover:text-white">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75l3 3m0 0l3-3m-3 3v-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
+      {/* Content */}
+      {activeView === 'charts' ? renderChartsView() : <ProfileGame />}
 
       <footer className="mt-6 text-center text-gray-500">
-        <p>Анализ каналов привлечения © 2023</p>
+        <p>Freedom Finance © 2023</p>
       </footer>
     </div>
   )
